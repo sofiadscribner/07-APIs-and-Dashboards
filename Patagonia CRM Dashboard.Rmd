@@ -1,0 +1,101 @@
+---
+title: "Patagonia CRM Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+---
+
+```{r setup}
+#| include: false
+
+# Load packages.
+library(tidyverse)
+library(flexdashboard)
+library(shiny)
+library(rsconnect)
+
+# Import data.
+customer_data <- read_csv("customer_data.csv") |> 
+  mutate(age = 2023 - birth_year)
+```
+
+Sidebar {.sidebar}
+------------------------------------------
+
+```{r}
+# Select the region.
+selectInput(
+  inputId = "region",
+  label = "Region",
+  choices = unique(customer_data$region)
+)
+```
+
+Row
+------------------------------------------
+
+### Age and Credit
+
+```{r}
+# Plot with reference to the region.
+renderPlot({
+  customer_data |> 
+    filter(region == input$region) |> 
+    ggplot(aes(x = age, y = credit, color = gender)) +
+    geom_jitter(size = 3, alpha = 0.5)
+})
+```
+
+Row
+------------------------------------------
+
+### Average Income
+
+```{r}
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the average income.
+  avg_income <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(avg_income = mean(income)) |> 
+    pull()
+  
+  # Print the average income in a value box.
+  valueBox(round(avg_income), icon = "fa-money")
+})
+```
+
+### Average Credit Score
+
+```{r}
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the average credit.
+  avg_credit <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(avg_credit = mean(credit)) |> 
+    pull()
+  
+  # Print the average credit in a value box.
+  valueBox(round(avg_credit), icon = "fa-bank")
+})
+```
+
+### Median Age
+
+```{r}
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the median age.
+  med_age <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(med_age = median(age)) |> 
+    pull()
+  
+  # Print the median age in a value box.
+  valueBox(med_age, icon = "fa-address-book")
+})
+```
+
