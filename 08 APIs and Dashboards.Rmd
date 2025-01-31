@@ -405,7 +405,7 @@ Treat the title like a variable name and publish (which may take a few minutes)!
 - [More on {flexdashboard}](https://pkgs.rstudio.com/flexdashboard/index.html)
 - [*Mastering Shiny*](https://mastering-shiny.org)
 
-## Exercise 8
+## Exercise 7
 
 In RStudio on Posit Cloud, do the following in *two* documents.
 
