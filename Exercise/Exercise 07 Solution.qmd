@@ -1,10 +1,9 @@
 ---
 title: "Exercise 8"
-author: "Marc Dotson"
 format: docx
 ---
 
-In RStudio on Posit Cloud, do the following in *two* documents.
+In RStudio, do the following in *two* documents.
 
 1. In a Quarto document with `format: docx`, wrangle the customer data to include the total amount spent in-store for each customer. Write this data as a CSV file *in the Exercises folder*.
 2. In an R Markdown document, modify the dashboard from class by importing the new data, adding a second input function to the sidebar to select from `college_degree`, modifying the plot to filter on both input functions, replacing age with total amount spent in-store in the plot, and modifying the call-out boxes to filter on both input functions.
@@ -51,15 +50,15 @@ store_revenue <- tbl(con, "store_revenue") |>
 dbDisconnect(con)
 
 # Write as a CSV.
-write_csv(store_revenue, here::here("Data", "store_revenue.csv"))
+write_csv(store_revenue, "store_revenue.csv")
 ```
 
 Now to import the data that I have locally.
 
 ```{r}
 # Import the data.
-customer_data <- read_csv(here::here("Data", "customer_data.csv"))
-store_revenue <- read_csv(here::here("Data", "store_revenue.csv"))
+customer_data <- read_csv("customer_data.csv")
+store_revenue <- read_csv("store_revenue.csv")
 ```
 
 Now we can tidy the data to calculate the amount spent in-store for each customer.
@@ -80,7 +79,7 @@ crm_data <- customer_data |>
   left_join(total_spent, join_by(customer_id))
 
 # Write the new crm_data as a CSV in Exercises.
-write_csv(crm_data, here::here("Exercises", "Exercise 08", "crm_data.csv"))
+write_csv(crm_data, "crm_data.csv")
 ```
 
 ## Dashboard

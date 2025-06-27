@@ -13,9 +13,16 @@ output:
 ![](Figures/process_import.png){width=900px}
 </center>
 
+## Motivating Example
+
+Now that your supervisor has seen you successfully work with the PostgreSQL database, she wants you to access some survey data through an API. Have you used an API before?
+
+Additionally, she wants you to find some way to display all of these visualizations in a more interactive format. She would like to avoid having to create a long report filled with scatterplots of every single combination of numerical variables, for example. How might this be accomplished?
+
+
 ## APIs
 
-Databases are a type of server. Instead of querying a database, **APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with throttling what and how much data you can access.
+Databases are a type of server. Instead of querying a database, **APIs** (Application Programming Interfaces) are a *general* way to access any server that provide permission to access data along with securely controlling what and how much data you can access.
 
 <center>
 ![](Figures/import_api.png){width=850px}
@@ -30,9 +37,9 @@ Just like SQL has a variety of *backends*, to use an API you should use an **API
 
 ## Use an API
 
-Install and load the {qualtRics} package. Remember to call `install.packages()` in the console only!
+Install and load the {qualtRics} package so that we can access the survey data. Remember to press Tools then Install Packages to install it before trying to load it.
 
-Still in the console, call the following:
+In the console (NOT a code chunk), call the following:
 
 ```{r eval=FALSE}
 qualtRics::qualtrics_api_credentials(
@@ -109,6 +116,20 @@ We've discussed a few good practices when it comes to importing data:
 
 When we import data from a server in Quarto, every time we render the document it will re-execute and eat up server bandwidth (i.e., database access or API calls). It's better to do this once and then, if we need to show how we got the data, include the code with the relevant cell set to `#| eval: false`.
 
+## Your Turn!
+
+Save the data locally as a CSV like we learned how to last time. Then set the chunk where you accessed the survey data to `#| eval: false`.
+
+## Solution 
+
+```{r}
+
+survey_data |> 
+  write_csv("Data", "store_revenue.csv")
+
+```
+
+
 ## Marketing Analytics Process
 
 <center>
@@ -132,9 +153,9 @@ Dashboards, webapps, and APIs are examples of **data products**, ways to share d
 
 ## Dashboards
 
-We can use **dashboards** to interactively report on key performance indicators, visualizations, and data exploration. We can build dashboards using R Markdown (and Quarto soon). We'll also use [{shiny}](https://shiny.rstudio.com) functions, the industry-standard for webapps, to make the dashboard interactive.
+We can use **dashboards** to interactively report on key performance indicators, visualizations, and data exploration. We can build dashboards using R Markdown. We'll also use [{shiny}](https://shiny.rstudio.com) functions, the industry-standard for webapps, to make the dashboard interactive.
 
-Install the {markdown}, {rmarkdown}, {flexdashboard}, {shiny}, and {rsconnect} packages using the console. Create a new dashboard by creating an **R Markdown** document > **From Template** > **Flex Dashboard**.
+Install the {markdown}, {rmarkdown}, {flexdashboard}, {shiny}, and {rsconnect} packages. Create a new dashboard by creating an **R Markdown** document > **From Template** > **Flex Dashboard**.
 
 ## Patagonia CRM Dashboard
 
@@ -171,13 +192,16 @@ The first code cell is named `setup` and has `#| include: false` (the opposite o
 Note that the data **must be in the same folder as the dashboard .Rmd** which is also the *working directory* for the dashboard.
 
 ```{r eval=FALSE}
+
 # Load packages.
+
 library(tidyverse)
 library(flexdashboard)
 library(shiny)
 library(rsconnect)
 
-# Import data (no need to use here::here() this time).
+# Import data.
+
 customer_data <- read_csv("customer_data.csv") |> 
   mutate(age = 2023 - birth_year)
 ```
@@ -225,12 +249,12 @@ Code cells following the sidebar header will show up in the sidebar.
 
 ## Input Functions
 
-**Input functions** make the dashboard interactive. There are many different input functions, but they all include an input ID and an input label.
+**Input functions** make the dashboard interactive. They allow the use to select or input variables which in turn adjust the visualizations. There are many different input functions, but they all include an input ID and an input label.
 
 Let's add one to the sidebar.
 
 ```{r eval=FALSE}
-# Select the region.
+
 selectInput(
   inputId = "region",
   label = "Region",
@@ -247,7 +271,7 @@ Visualizations are at the heart of any interactive dashboard. In order to refere
 Let's add a row, name the dashboard element within the row with a sub-heading `### Age and Credit`, and use a render function to add a plot.
 
 ```{r eval=FALSE}
-# Plot with reference to the region.
+
 renderPlot({
   customer_data |> 
     filter(region == input$region) |> 
@@ -344,6 +368,10 @@ Treat the title like a variable name and publish (which may take a few minutes)!
 ![](Figures/flexdashboards_publish-02.png){width=900px}
 </center>
 
+## Live Coding Exercise
+
+What if we would like to add a regression line to our plot? How can we do that?
+
 ## Wrapping Up
 
 *Summary*
@@ -362,7 +390,7 @@ Treat the title like a variable name and publish (which may take a few minutes)!
 
 ## Exercise 7
 
-In RStudio on Posit Cloud, do the following in *two* documents.
+In RStudio, do the following in *two* documents.
 
 1. In a Quarto document with `format: docx`, wrangle the customer data to include the total amount spent in-store for each customer. Write this data as a CSV file *in the Exercises folder*.
 2. In an R Markdown document, modify the dashboard from class by importing the new data, adding a second input function to the sidebar to select from `college_degree`, modifying the plot to filter on both input functions, replacing age with total amount spent in-store in the plot, and modifying the call-out boxes to filter on both input functions.
