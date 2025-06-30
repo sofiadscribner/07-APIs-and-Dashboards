@@ -122,10 +122,10 @@ Save the data locally as a CSV like we learned how to last time. Then set the ch
 
 ## Solution 
 
-```{r}
+```{r eval=FALSE}
 
 survey_data |> 
-  write_csv("Data", "store_revenue.csv")
+  write_csv("store_revenue.csv")
 
 ```
 
@@ -395,5 +395,3 @@ In RStudio, do the following in *two* documents.
 1. In a Quarto document with `format: docx`, wrangle the customer data to include the total amount spent in-store for each customer. Write this data as a CSV file *in the Exercises folder*.
 2. In an R Markdown document, modify the dashboard from class by importing the new data, adding a second input function to the sidebar to select from `college_degree`, modifying the plot to filter on both input functions, replacing age with total amount spent in-store in the plot, and modifying the call-out boxes to filter on both input functions.
 3. Knit the R Markdown document and publish it on shinyapps.io. Include the link at the end of the Quarto document (add a link with `[text](URL)`), rendered as a Word document, and upload to Canvas.
-4. Before Tuesday, download and install the latest version of [R](https://cran.r-project.org/) and [RStudio](https://posit.co/download/rstudio-desktop/) (in that order). (If you have a Mac, note the difference between Intel and Apple silicon!)
-
