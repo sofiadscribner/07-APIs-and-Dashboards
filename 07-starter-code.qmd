@@ -1,0 +1,169 @@
+---
+title: "07 APIs and Dashboards Starter Code"
+format: docx
+editor: visual
+---
+
+## Lecture 07 Notes
+
+### Use an API
+
+```{r}
+
+library(tidyverse)
+
+# Paste the following code to the console below and run it. You are saving our API key and the base URL of the API.
+
+qualtRics::qualtrics_api_credentials(
+  api_key = "Ir2JDPvhOjSmMIpWo8bwVUAbvPs6uwGqIKipAuo6", 
+  base_url = "sjc1.qualtrics.com"
+)
+
+readRenviron("~/.Renviron")
+```
+
+### Import Data
+
+```{r}
+
+# This code displays all the avaiable surveys.
+
+all_surveys()
+```
+
+```{r}
+
+# This code saves the survey of interest in our R environment.
+
+survey_data <- fetch_survey("SV_8B5zozRL3hVr8dU")
+
+survey_data
+```
+
+### Your Turn
+
+```{r}
+
+# Write the survey data locally.
+```
+
+### YAML
+
+Copy this YAML format for your dashboard:
+
+---
+title: "Patagonia CRM Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+runtime: shiny
+---
+
+### Setup
+
+```{r}
+
+# Copy this code for the setup chunk of your dashboard.
+
+# Load packages.
+
+library(tidyverse)
+library(flexdashboard)
+library(shiny)
+library(rsconnect)
+
+# Import data.
+
+customer_data <- read_csv("customer_data.csv") |> 
+  mutate(age = 2023 - birth_year)
+```
+
+### Add Rows, Columns, Sidebars
+
+```{# Copy and paste these to designate sections of your dashboard code as rows, columns, or sidebars.}
+
+Row
+------------------------------------------
+  
+Column
+------------------------------------------
+
+Sidebar {.sidebar}
+------------------------------------------
+```
+
+### Input Functions
+
+```{r}
+
+# Copy and past this input function to allow the users of your dashboard to select the region they're interested in.
+
+selectInput(
+  inputId = "region",
+  label = "Region",
+  choices = unique(customer_data$region)
+)
+```
+
+### Render Functions
+
+```{r}
+
+# This code renders a plot and references the input function to check which region it should be rendering.
+
+renderPlot({
+  customer_data |> 
+    filter(region == input$region) |> 
+    ggplot(aes(x = age, y = credit, color = gender)) +
+    geom_jitter(size = 3, alpha = 0.5)
+})
+```
+
+```{r}
+
+# USe these additional code chunks to add the elements as instructed. Remember to start the section with a row header!
+
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the average income.
+  avg_income <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(avg_income = mean(income)) |> 
+    pull()
+  
+  # Print the average income in a value box.
+  valueBox(round(avg_income), icon = "fa-money")
+})
+
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the average credit.
+  avg_credit <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(avg_credit = mean(credit)) |> 
+    pull()
+  
+  # Print the average credit in a value box.
+  valueBox(round(avg_credit), icon = "fa-bank")
+})
+
+# Add a value box (numeric summary).
+renderValueBox({
+  # Compute the median age.
+  med_age <- customer_data |> 
+    filter(region == input$region) |> 
+    summarize(med_age = median(age)) |> 
+    pull()
+  
+  # Print the median age in a value box.
+  valueBox(med_age, icon = "fa-address-book")
+})
+```
+
+### Live Coding Exercise
+
+```{r}
+
+# Use this space to brainstorm ideas for the live coding exercise.
+```
